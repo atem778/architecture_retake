@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    /* БЭМ: БЛОК - catalog */
+    .catalog {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* БЭМ: ЭЛЕМЕНТ - catalog__header */
+    .catalog__header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .catalog__title {
+        font-size: 32px;
+        color: #333;
+        margin: 0;
+    }
+
+    /* БЭМ: БЛОК - product-card */
+    .product-card {
+        display: inline-block;
+        width: 280px;
+        margin: 15px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        vertical-align: top;
+        transition: box-shadow 0.3s;
+    }
+
+    .product-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* БЭМ: ЭЛЕМЕНТЫ product-card */
+    .product-card__image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #f5f5f5;
+    }
+
+    .product-card__title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 15px 0 10px;
+        color: #333;
+    }
+
+    .product-card__description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+
+    .product-card__price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2c5aa0;
+        margin-bottom: 15px;
+    }
+
+    .product-card__button {
+        width: 100%;
+        padding: 12px;
+        background: #2c5aa0;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .product-card__button:hover {
+        background: #1e3d6f;
+    }
+
+    /* БЭМ: МОДИФИКАТОРЫ product-card */
+    .product-card--sale {
+        border-color: #ff6b6b;
+        background: #fff5f5;
+    }
+
+    .product-card--sale .product-card__price {
+        color: #ff6b6b;
+    }
+
+    .product-card--out-of-stock {
+        opacity: 0.6;
+    }
+
+    .product-card--out-of-stock .product-card__button {
+        background: #999;
+        cursor: not-allowed;
+    }
+
+    /* БЭМ: БЛОК - badge */
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .badge--new {
+        background: #4caf50;
+        color: white;
+    }
+
+    .badge--sale {
+        background: #ff6b6b;
+        color: white;
+    }
+</style>
+
+<div class="catalog">
+    <!-- БЭМ: ЭЛЕМЕНТ catalog__header -->
+    <div class="catalog__header">
+        <h1 class="catalog__title">Интернет-магазин (БЭМ)</h1>
+    </div>
+
+    <!-- БЭМ: БЛОК product-card -->
+    <div class="product-card">
+        <div class="badge badge--new">Новинка</div>
+        <img class="product-card__image" src="https://via.placeholder.com/280x200" alt="Товар 1">
+        <h3 class="product-card__title">Смартфон X100</h3>
+        <p class="product-card__description">Флагманский смартфон с тройной камерой и AMOLED дисплеем</p>
+        <div class="product-card__price">45 990 ₽</div>
+        <button class="product-card__button">В корзину</button>
+    </div>
+
+    <!-- БЭМ: БЛОК product-card + МОДИФИКАТОР --sale -->
+    <div class="product-card product-card--sale">
+        <div class="badge badge--sale">-30%</div>
+        <img class="product-card__image" src="https://via.placeholder.com/280x200" alt="Товар 2">
+        <h3 class="product-card__title">Ноутбук ProBook</h3>
+        <p class="product-card__description">Мощный ноутбук для работы и игр. Intel i7, 16GB RAM</p>
+        <div class="product-card__price">69 990 ₽</div>
+        <button class="product-card__button">В корзину</button>
+    </div>
+
+    <!-- БЭМ: БЛОК product-card + МОДИФИКАТОР --out-of-stock -->
+    <div class="product-card product-card--out-of-stock">
+        <img class="product-card__image" src="https://via.placeholder.com/280x200" alt="Товар 3">
+        <h3 class="product-card__title">Наушники AudioMax</h3>
+        <p class="product-card__description">Беспроводные наушники с активным шумоподавлением</p>
+        <div class="product-card__price">12 990 ₽</div>
+        <button class="product-card__button" disabled>Нет в наличии</button>
+    </div>
+
+    <!-- БЭМ: БЛОК product-card (обычный) -->
+    <div class="product-card">
+        <img class="product-card__image" src="https://via.placeholder.com/280x200" alt="Товар 4">
+        <h3 class="product-card__title">Планшет TabPro</h3>
+        <p class="product-card__description">10-дюймовый планшет с поддержкой стилуса</p>
+        <div class="product-card__price">32 500 ₽</div>
+        <button class="product-card__button">В корзину</button>
+    </div>
+</div>
+
+<script>
+    // Обработка кликов по кнопкам
+    document.querySelectorAll('.product-card__button').forEach(button => {
+        button.addEventListener('click', function() {
+            if (!this.disabled) {
+                const card = this.closest('.product-card');
+                const title = card.querySelector('.product-card__title').textContent;
+                alert(`Товар "${title}" добавлен в корзину!`);
+            }
+        });
+    });
+</script>
+
+{% endblock content %}

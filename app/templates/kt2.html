@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- ============================== -->
+<!-- ЗАДАНИЕ: ДЕМОНСТРАЦИЯ ПРИНЦИПОВ ООП -->
+<!-- ============================== -->
+<div class="kt-container" style="font-family: sans-serif; padding: 20px;">
+    <h1>Контрольная работа (КТ): Принципы ООП</h1>
+    <p>Откройте консоль браузера (F12), чтобы увидеть результаты работы классов.</p>
+
+    <!-- Контейнер для вывода результатов на страницу -->
+    <div id="oop-output" style="background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 20px;">
+        <h3>Результаты выполнения:</h3>
+        <ul id="results-list"></ul>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // ПРИНЦИПЫ ООП НА ФРОНТЕНДЕ (JAVASCRIPT ES6)
+    // ==========================================
+
+    // 1. АБСТРАКЦИЯ и БАЗОВЫЙ КЛАСС
+    // Мы выделяем общие черты для всех сотрудников, абстрагируясь от деталей.
+    class Employee {
+        constructor(name, position) {
+            this.name = name;
+            this.position = position;
+            // 3. ИНКАПСУЛЯЦИЯ
+            // Скрываем зарплату от прямого изменения извне (используем _)
+            this._salary = 50000; 
+        }
+
+        // Геттер для безопасного доступа к инкапсулированным данным
+        getSalary() {
+            return this._salary;
+        }
+
+        // Метод, который будет переопределен (заготовка для полиморфизма)
+        doWork() {
+            return `${this.name} выполняет общую работу.`;
+        }
+    }
+
+    // 2. НАСЛЕДОВАНИЕ
+    // Класс Developer наследует все свойства и методы от Employee
+    class Developer extends Employee {
+        constructor(name, programmingLanguage) {
+            // Вызываем конструктор базового класса
+            super(name, "Разработчик"); 
+            this.language = programmingLanguage;
+            this._salary = 120000; // Переопределяем зарплату
+        }
+
+        // 4. ПОЛИМОРФИЗМ
+        // Переопределяем метод doWork() под свою специфику
+        doWork() {
+            return `${this.name} пишет код на ${this.language}. (Зарплата: ${this.getSalary()} руб.)`;
+        }
+    }
+
+    // Еще один класс-наследник для демонстрации полиморфизма
+    class Designer extends Employee {
+        constructor(name) {
+            super(name, "Дизайнер");
+            this._salary = 90000;
+        }
+
+        // 4. ПОЛИМОРФИЗМ
+        // Тот же метод doWork(), но работает совершенно иначе
+        doWork() {
+            return `${this.name} рисует макеты в Figma. (Зарплата: ${this.getSalary()} руб.)`;
+        }
+    }
+
+    // --- ЗАПУСК И ВЫВОД РЕЗУЛЬТАТОВ НА СТРАНИЦУ ---
+    
+    // Создаем объекты (Инстанцирование)
+    const dev = new Developer("Алексей", "Python");
+    const designer = new Designer("Мария");
+
+    // Функция, демонстрирующая полиморфизм: ей не важно, кто передан, 
+    // главное, что у объекта есть метод doWork()
+    function assignTask(employee) {
+        return employee.doWork();
+    }
+
+    // Выводим результаты в HTML (в блок, который мы добавили в шаблон)
+    const resultsList = document.getElementById('results-list');
+    
+    const task1 = assignTask(dev);
+    const task2 = assignTask(designer);
+
+    resultsList.innerHTML += `<li><strong>Задача 1:</strong> ${task1}</li>`;
+    resultsList.innerHTML += `<li><strong>Задача 2:</strong> ${task2}</li>`;
+    resultsList.innerHTML += `<li><em>(Пример инкапсуляции: попытка изменить _salary напрямую извне не рекомендуется, используем геттеры)</em></li>`;
+
+    // Дублируем в консоль для удобства проверки
+    console.log("--- ООП Результаты ---");
+    console.log(task1);
+    console.log(task2);
+
+</script>
+
+{% endblock content %}

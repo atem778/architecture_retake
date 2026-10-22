@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .header__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header__logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .header__nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        .header__link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .header__link:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header__container {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .header__nav {
+                gap: 16px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <header class="header">
+        <div class="header__container">
+            <a href="/" class="header__logo">Контрольная работа</a>
+            <nav class="header__nav">
+                <a href="/kt2/" class="header__link">ООП</a>
+                <a href="/kt3/" class="header__link">SOLID</a>
+                <a href="/kt4/" class="header__link">БЭМ</a>
+            </nav>
+        </div>
+
+    </header>
+
+    <main>{% block content %}{% endblock content %}</main>
+
+    <footer></footer>
+
+</body>
+
+</html>

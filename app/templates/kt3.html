@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="kt-container" style="font-family: sans-serif; padding: 20px;">
+    <h1>КТ: Принципы SOLID</h1>
+    <div id="output" style="background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 20px;">
+        <h3>Результаты:</h3>
+        <ul id="results"></ul>
+    </div>
+</div>
+
+<script>
+    // [I] РАЗДЕЛЕНИЕ ИНТЕРФЕЙСОВ - узкие интерфейсы вместо одного "толстого"
+    class Payable { pay(amount) { throw new Error("Реализуйте pay()"); } }
+    class Refundable { refund(amount) { throw new Error("Реализуйте refund()"); } }
+
+    // [S] ЕДИНСТВЕННАЯ ОТВЕТСТВЕННОСТЬ - каждый класс делает одно дело
+    class Order {
+        constructor(id, amount) { this.id = id; this.amount = amount; }
+        getInfo() { return `Заказ #${this.id} на ${this.amount}₽`; }
+    }
+
+    // [D] ИНВЕРСИЯ ЗАВИСИМОСТЕЙ - базовый класс (абстракция)
+    class PaymentMethod extends Payable {
+        constructor(name) { super(); this.name = name; }
+    }
+
+    // Конкретные реализации
+    class CardPayment extends PaymentMethod {
+        constructor() { super("Карта"); }
+        pay(amount) { return `Оплачено ${amount}₽ через ${this.name}`; }
+    }
+
+    class CryptoPayment extends PaymentMethod {
+        constructor() { super("Крипта"); }
+        pay(amount) { return `Оплачено ${amount}₽ через ${this.name}`; }
+    }
+
+    // [I] + [S] - класс с дополнительной функциональностью
+    class BankPayment extends PaymentMethod {
+        constructor() { super("Банк"); }
+        pay(amount) { return `Оплачено ${amount}₽ через ${this.name}`; }
+        refund(amount) { return `Возврат ${amount}₽ через ${this.name}`; }
+    }
+
+    // [O] ОТКРЫТ/ЗАКРЫТ - можно добавлять новые PaymentMethod без изменения этого класса
+    // [D] зависит от абстракции PaymentMethod, а не от конкретных классов
+    // [L] ЛЮБОЙ PaymentMethod корректно подставляется (подстановка Лисков)
+    class PaymentService {
+        constructor(paymentMethod) { this.method = paymentMethod; }
+        process(order) { return this.method.pay(order.amount); }
+    }
+
+    // --- ЗАПУСК ---
+    const results = document.getElementById('results');
+    const order = new Order(1001, 5000);
+
+    // [L] + [O] - разные реализации работают одинаково
+    [new CardPayment(), new CryptoPayment(), new BankPayment()].forEach(method => {
+        const service = new PaymentService(method);
+        results.innerHTML += `<li><b>${method.name}:</b> ${service.process(order)}</li>`;
+    });
+
+    // [I] - возврат только у тех, кто поддерживает
+    const bank = new BankPayment();
+    results.innerHTML += `<li><i>Возврат:</i> ${bank.refund(5000)}</li>`;
+
+    // Сводка
+    results.innerHTML += `
+        <hr>
+        <li><b>S:</b> Order, PaymentMethod - каждый класс делает одно</li>
+        <li><b>O:</b> Добавили CryptoPayment без изменения PaymentService</li>
+        <li><b>L:</b> Любой PaymentMethod подставляется в PaymentService</li>
+        <li><b>I:</b> Разделили Payable и Refundable</li>
+        <li><b>D:</b> PaymentService зависит от абстракции PaymentMethod</li>
+    `;
+</script>
+
+{% endblock content %}
